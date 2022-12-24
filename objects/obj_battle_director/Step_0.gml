@@ -8,7 +8,7 @@ scr_button_layout();
 
 if battle_menu=1&&battle_intro=0
 {	
-	#region Boring Chip Rules
+	#region Boring Chip Rules - (No mixing codes, etc)
 	if selected_chips[# 0,0]=0																														// No chips Selected
 	{
 		selected_code="*"; 

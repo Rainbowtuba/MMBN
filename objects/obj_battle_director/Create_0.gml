@@ -1,6 +1,7 @@
 /// @description Insert description here
 // You can write your code in this editor
 randomise();
+audio_play_sound(snd_battle_music,1,1);
 globalvar   chip_folder, battle_folder_temp, selected_chips, battle_menu, 
 			rm_w, rm_h, stage_w, stage_h, spacing_w, spacing_h, scale,
 			tile_type, tile_owner, tile_highlight, stage_col, stage_row, cell_h, cell_w,
@@ -60,7 +61,7 @@ chip_create(12, 4,"*");
 chip_create(13, 4,"*");	
 
 chip_create(14,21,"B");	
-chip_create(12,21,"B");	
+chip_create(15,21,"B");	
 chip_create(16,21,"S");
 
 chip_create(17,31,"L");
