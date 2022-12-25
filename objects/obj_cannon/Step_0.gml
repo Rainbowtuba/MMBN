@@ -12,7 +12,7 @@ event_inherited();
 if hit_alarm != 0 hit_alarm-=1;
 if hit_alarm = 0 hit=0;
 	
-if state = ""
+if state=""
 {
 	sprite_index=spr_cannon;
 	reticle_x = grid_x;
@@ -25,13 +25,14 @@ if state = ""
 		reticle_timer=60/ai_level;
 	}
 }
-if state = "seek"
+if state="seek"
 {	
 	if reticle_x=obj_mega_man.grid_x&&grid_y=obj_mega_man.grid_y 
 	{
 		enemy_sighted=1;
 		reticle_fire=20
 		state="attack";
+		alarm[1]=12;
 	}
 	//reticle_x = grid_x;
 	reticle_timer-=1;
@@ -46,18 +47,23 @@ if state = "seek"
 		{
 			reticle_x = grid_x;
 			reticle_wait = 20/ai_level;
-			state = "";
+			state="";
 			enemy_sighted=0;
 		}
 	}
 }
-if state = "attack"
+if state="attack"
 {
 	image_speed = 1;
 	sprite_index=spr_cannon_fire;
-	if reticle_fire>=1 reticle_fire-=1
+	if reticle_fire>=1 
+	{
+		reticle_fire-=1
+		
+	}
 	else if reticle_fire<1
 	{
+		
 		if grid_y=obj_mega_man.grid_y&&hit=0
 		{
 				hit=1;

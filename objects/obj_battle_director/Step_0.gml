@@ -41,11 +41,20 @@ if battle_menu=1&&battle_intro=0
 	custom_gauge_timer=0;
 	
 	#region Pressing Right
-	if rrp chip_menu_sel+=1
+	if rrp 
+	{
+		chip_menu_sel+=1;
+		audio_play_sound(snd_selector_move,2,0);
+	}
 	if chip_menu_sel>=6 chip_menu_sel-=6;
+	
 	#endregion
 	#region Pressing Left
-	if llp chip_menu_sel-=1
+	if llp 
+	{
+		chip_menu_sel-=1;
+		audio_play_sound(snd_selector_move,2,0);
+	}
 	if chip_menu_sel<0 chip_menu_sel+=6;
 	#endregion
 	#region Pressing "Accept"
@@ -68,13 +77,15 @@ if battle_menu=1&&battle_intro=0
 				}
 				#endregion
 				selected_chips[# 0,empty_space]=battle_folder_temp[# 0,chip_menu_sel];
-				selected_chips[# 1,empty_space]=battle_folder_temp[# 1,chip_menu_sel]
+				selected_chips[# 1,empty_space]=battle_folder_temp[# 1,chip_menu_sel];
+				audio_play_sound(snd_selector_choose,2,0);
 			}
 		}
 	// End
 		else if aap && chip_menu_sel = 5
 		{
 			battle_menu+=1;
+			audio_play_sound(snd_selector_choose,2,0);
 		}
 	#endregion
 	#region Pressing "Back"
@@ -88,11 +99,12 @@ if battle_menu=1&&battle_intro=0
 						recent_selection = j; 	break;
 					}
 				}
-		if recent_selection>-1&&selection_order[recent_selection]!=-1
-			{
-				selected_chips[# 0, recent_selection]=0; selected_chips[# 1, recent_selection]=0;
-				battle_folder_temp[# 2, selection_order[recent_selection]] = 0;	selection_order[recent_selection]=-1;
-			}
+			if recent_selection>-1&&selection_order[recent_selection]!=-1
+				{
+					selected_chips[# 0, recent_selection]=0; selected_chips[# 1, recent_selection]=0;
+					battle_folder_temp[# 2, selection_order[recent_selection]] = 0;	selection_order[recent_selection]=-1;
+					audio_play_sound(snd_selector_back,2,0);
+				}
 		}
 	#endregion
 	#region Blink Timer

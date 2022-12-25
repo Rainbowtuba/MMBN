@@ -6,11 +6,10 @@ max_hp = 100;
 grid_x=2;
 grid_y=2;
 
-state = "";
+state="";
 buffered_state="";
 state_change=0;
 
-character = 1;
 buster_type = 1; // 0 = Machine Gun, 1 = Charge Shot
 item_cooldown_time=12;
 buster_cooldown_time=30;

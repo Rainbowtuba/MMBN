@@ -9,7 +9,7 @@ hit=0;
 ai_level = 1;
 my_wave=noone;
 
-state = "";
+state="";
 hurt_alarm=0;
 death=0;
 

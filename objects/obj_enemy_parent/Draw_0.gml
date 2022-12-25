@@ -1,8 +1,6 @@
 /// @description Insert description here
 // You can write your code in this editor
 
-/// @description Insert description here
-// You can write your code in this editor
 draw_sprite_ext(sprite_index,-1,x,y+2*scale,scale,scale,0,c_white,1-fade);
 
 var font = font_add_sprite_ext(spr_font_debug_numbers_silver, "1234567890", true, 0);

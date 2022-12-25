@@ -3,21 +3,21 @@
 
 
 
-if state = "move"		
+if state="move"		
 {
 	if buffered_state="" state=""; 
 	else 
 	{
 		state=buffered_state; 
-		buffered_state = "";
+		buffered_state="";
 		image_index=0;
 	}
 }
-else if state = "shoot"		{state ="";attack_connected=0;}
-else if state = "chargea"	{state ="";attack_connected=0;}
-else if state = "chargeb"	{state ="";attack_connected=0;}
-else if state = "hurt"		{state ="";attack_connected=0;}
-else if state = "cannon0"	
+else if state="shoot"		{state ="";attack_connected=0;}
+else if state="chargea"	{state ="";attack_connected=0;}
+else if state="chargeb"	{state ="";attack_connected=0;}
+else if state="hurt"		{state ="";attack_connected=0;}
+else if state="cannon0"	
 {
 	if		selected_chips[# 0, 0]=1 state="cannon1";
 	else if selected_chips[# 0, 0]=2 state="cannon2";

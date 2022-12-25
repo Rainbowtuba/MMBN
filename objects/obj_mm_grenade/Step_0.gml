@@ -1,6 +1,6 @@
 /// @description Insert description here
 // You can write your code in this editor
-depth = oPlayerBattle.depth-100;
+depth = obj_mega_man.depth-100;
 if x<=(spacing_w+dest_x*(cell_w))
 {
 	x+=3*scale;

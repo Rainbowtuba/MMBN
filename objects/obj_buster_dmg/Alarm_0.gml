@@ -1,7 +1,3 @@
 /// @description Insert description here
 // You can write your code in this editor
-if state="attack" 
-{
-	state="";
-	reticle_timer-=attack_timer_max;
-}
+audio_play_sound(snd_buster_hit,2,0);

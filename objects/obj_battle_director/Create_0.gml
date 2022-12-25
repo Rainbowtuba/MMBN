@@ -6,7 +6,7 @@ globalvar   chip_folder, battle_folder_temp, selected_chips, battle_menu,
 			rm_w, rm_h, stage_w, stage_h, spacing_w, spacing_h, scale,
 			tile_type, tile_owner, tile_highlight, stage_col, stage_row, cell_h, cell_w,
 			custom_gauge_timer, custom_gauge_timer_max, selected_code, stage_effect,
-			stage_effect_type, battle_intro;
+			stage_effect_type, battle_intro, fade_in;
 
 battle_intro=1;
 
@@ -28,6 +28,9 @@ custom_gauge_timer_max=60*12;
 custom_gauge_timer=0;
 battle_menu_x = -sprite_get_width(spr_debug_chip_select_screen_HUD)*scale;
 custom_gauge_subimage = 0;
+
+fade_in=100;
+
 #region Selection Blinker
 chip_menu_sel = 0;
 

@@ -39,7 +39,7 @@ exit;
 					attack_connected=0;
 					state_change=0;
 				} 
-				else if state = "move"
+				else if state="move"
 				{
 					buffered_state="shoot";
 					
@@ -75,13 +75,14 @@ exit;
 				}
 			}
 		}
-		if state = "shoot"
+		if state="shoot"
 		{
 			if state_change=0
 			{
 				buster_cooldown=0;
 				buster_charge=0;
 				state_change=1;
+				audio_play_sound(snd_buster_small,2,0);
 			}
 			var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 			if enemy!=noone&&attack_connected=0 
@@ -98,7 +99,7 @@ exit;
 			}
 			else if enemy=noone&&attack_connected=0 buster_cooldown_time=45;
 		}
-		if state = "chargea"
+		if state="chargea"
 		{
 			if state_change=0
 			{
@@ -121,7 +122,7 @@ exit;
 			}
 			else if enemy=noone&&attack_connected=0 buster_cooldown_time=45
 		}
-		if state = "chargeb"
+		if state="chargeb"
 		{
 			if state_change=0
 			{
@@ -321,7 +322,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				if active_chip=21		buffered_state="grenade1";
 				else if active_chip=22  buffered_state="grenade2";
@@ -348,7 +349,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				if active_chip=25		buffered_state="cannonball1";
 				else if active_chip=26  buffered_state="cannonball2";
@@ -374,7 +375,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				if active_chip=28		buffered_state="bomb1";
 				else if active_chip=29  buffered_state="bomb2";
@@ -400,7 +401,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				if active_chip=31 buffered_state="sword";
 				if active_chip=32 buffered_state="widesword";
@@ -426,7 +427,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				if active_chip=147 buffered_state="recover10";
 				if active_chip=148 buffered_state="recover30";
@@ -498,7 +499,7 @@ exit;
 				image_index=0;
 				item_cooldown=0; 
 			}
-			else if state = "move"
+			else if state="move"
 			{
 				buffered_state="spreader";
 			}
@@ -525,9 +526,9 @@ exit;
 		{
 			with enemy 
 			{
-				if other.state = "cannon1" hp-=40; // hurt = 1;  event_user(0);
-				else if other.state = "cannon2" hp-=60; // hurt = 1;  event_user(0);
-				else if other.state = "cannon3" hp-=80; // hurt = 1;  event_user(0);
+				if other.state="cannon1" hp-=40; // hurt = 1;  event_user(0);
+				else if other.state="cannon2" hp-=60; // hurt = 1;  event_user(0);
+				else if other.state="cannon3" hp-=80; // hurt = 1;  event_user(0);
 				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_debug_explosion;
 			}
@@ -544,9 +545,9 @@ exit;
 			{
 				var behind=collision_line(spacing_w+(grid_x)*(cell_w),spacing_h+(grid_y)*(cell_h),spacing_w+(grid_x+1)*(cell_w),spacing_h+(grid_y)*(cell_h),obj_enemy_parent,0,1)
 				
-				if other.state = "airshot1"		 {hp-=20;}// hurt = 1;  event_user(0);
-				else if other.state = "airshot2" {hp-=30;} // hurt = 1;  event_user(0);
-				else if other.state = "airshot3" {hp-=40;} // hurt = 1;  event_user(0);
+				if other.state="airshot1"		 {hp-=20;}// hurt = 1;  event_user(0);
+				else if other.state="airshot2" {hp-=30;} // hurt = 1;  event_user(0);
+				else if other.state="airshot3" {hp-=40;} // hurt = 1;  event_user(0);
 				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_debug_explosion;
 				if grid_x<stage_col&&behind=noone&&hp>0&&tile_type[grid_x+1,grid_y]!=0 grid_x+=1;
@@ -791,65 +792,51 @@ exit;
 	#endregion
 	
 	#region Sprites
-	if character = 1
-	{
-		if state = ""				sprite_index=spr_mm_stand;
-		if state = "move"			sprite_index=spr_mm_move;
-		if state = "hurt"			sprite_index=spr_mm_hurt;
-		if state = "shoot"			sprite_index=spr_mm_shoot;
-		if state = "chargea"		sprite_index=spr_mm_shoot_charge_a;
-		if state = "chargeb"		sprite_index=spr_mm_shoot_charge_b;
-		
-		if state = "cannon0"		sprite_index=spr_mm_cannon_ready;
-		if state = "cannon1"		sprite_index=spr_mm_cannon_1_fire;
-		if state = "cannon2"		sprite_index=spr_mm_cannon_2_fire;
-		if state = "cannon3"		sprite_index=spr_mm_cannon_3_fire;
-		
-		if state = "airshot1"
-		|| state = "airshot2"
-		|| state = "airshot3"		sprite_index=spr_mm_air_shot;
-		
-		if state = "volcano1"		sprite_index=spr_mm_volcano_1;
-		if state = "volcano2"		sprite_index=spr_mm_volcano_2;
-		if state = "volcano3"		sprite_index=spr_mm_volcano_3;
-		if state = "volcano4"		sprite_index=spr_mm_volcano_4;
-		
-		if state = "shotgun"
-		|| state = "vgun"
-		|| state = "sidegun"
-		|| state = "spreader"		sprite_index=spr_mm_shoot;
-		
-		if state = "bubbler"
-		|| state = "bubblev"
-		|| state = "bubbleside"		sprite_index=spr_mm_shoot;
-		
-		if state = "heatshot"
-		|| state = "heatv"
-		|| state = "heatside"		sprite_index=spr_mm_shoot;
 
-		if state = "grenade1"
-		|| state = "grenade2"
-		|| state = "grenade3"
-		|| state = "grenade4"		sprite_index=spr_mm_throw;
+	if state=""				sprite_index=spr_mm_stand;
+	if state="move"			sprite_index=spr_mm_move;
+	if state="hurt"			sprite_index=spr_mm_hurt;
+	if state="shoot"		sprite_index=spr_mm_shoot;
+	if state="chargea"		sprite_index=spr_mm_shoot_charge_a;
+	if state="chargeb"		sprite_index=spr_mm_shoot_charge_b;
 		
-		if state = "cannonball1"
-		|| state = "cannonball2"
-		|| state = "cannonball3"	sprite_index=spr_mm_throw;
+	if state="cannon0"		sprite_index=spr_mm_cannon_ready;
+	if state="cannon1"		sprite_index=spr_mm_cannon_1_fire;
+	if state="cannon2"		sprite_index=spr_mm_cannon_2_fire;
+	if state="cannon3"		sprite_index=spr_mm_cannon_3_fire;
 		
-		if state = "bomb1"
-		|| state = "bomb2"
-		|| state = "bomb3"			sprite_index=spr_mm_throw;	
+	if state="airshot1"||state="airshot2"||state="airshot3"	
+		sprite_index=spr_mm_air_shot;
 		
-		if state = "sword"
-		|| state = "widesword"
-		|| state = "longsword"		sprite_index=spr_mm_sword_swing;
+	if state="volcano1"		sprite_index=spr_mm_volcano_1;
+	if state="volcano2"		sprite_index=spr_mm_volcano_2;
+	if state="volcano3"		sprite_index=spr_mm_volcano_3;
+	if state="volcano4"		sprite_index=spr_mm_volcano_4;
 		
-		if state = "recover10"
-		|| state = "recover30"
-		|| state = "recover50"		sprite_index=spr_mm_recover;
+	if state="shotgun"||state="vgun"||state="sidegun"||state="spreader"
+		sprite_index=spr_mm_shoot;
 		
-		if state = "panelout1"
-		|| state = "panelout3"		sprite_index=spr_mm_panel_out;
-	}
+	if state="bubbler"||state="bubblev"||state="bubbleside"
+		sprite_index=spr_mm_shoot;
+		
+	if state="heatshot"||state="heatv"||state="heatside"
+		sprite_index=spr_mm_shoot;
 
+	if state="grenade1"||state="grenade2"||state="grenade3"||state="grenade4"
+		sprite_index=spr_mm_throw;
+		
+	if state="cannonball1"||state="cannonball2"||state="cannonball3"
+		sprite_index=spr_mm_throw;
+		
+	if state="bomb1"||state="bomb2"||state="bomb3"
+		sprite_index=spr_mm_throw;	
+		
+	if state="sword"||state="widesword"||state="longsword"
+		sprite_index=spr_mm_sword_swing;
+		
+	if state="recover10"||state="recover30"||state ="recover50"
+		sprite_index=spr_mm_recover;
+		
+	if state="panelout1"||state="panelout3"
+		sprite_index=spr_mm_panel_out;
 	#endregion
