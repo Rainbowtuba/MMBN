@@ -8,7 +8,7 @@ display_hp = hp;
 hit=0;
 ai_level = 1;
 my_wave=noone;
-
+depth=-y;
 state="";
 hurt_alarm=0;
 death=0;

@@ -13,10 +13,10 @@ if state="move"
 		image_index=0;
 	}
 }
-else if state="shoot"		{state ="";attack_connected=0;}
+else if state="shoot"	{state ="";attack_connected=0;}
 else if state="chargea"	{state ="";attack_connected=0;}
 else if state="chargeb"	{state ="";attack_connected=0;}
-else if state="hurt"		{state ="";attack_connected=0;}
+else if state="hurt"	{state ="";attack_connected=0;}
 else if state="cannon0"	
 {
 	if		selected_chips[# 0, 0]=1 state="cannon1";
@@ -35,5 +35,17 @@ else   if state="cannon1"		||state="cannon2"		||state="cannon3"
 		||state="sword"			||state="widesword"		||state="longsword"	
 		
 		||state="recover10"		||state="recover30"		||state="recover50"	
-		||state="panelout1"		||state="panelout3"
-		{state="";selected_chips[# 0,0]=0;ds_grid_translate(selected_chips,0,-1);attack_connected=0; buffered_state="";}
+		||state="panelout1"		||state="panelout3"		||state="attack+"
+		
+		{
+			state="";
+			selected_chips[# 0,0]=0;
+			ds_grid_translate(selected_chips,0,-1);
+			attack_connected=0; 
+			buffered_state="";
+			if selected_chips[# 0,0]=195
+			{
+				selected_chips[# 0,0]=0;
+				ds_grid_translate(selected_chips,0,-1);
+			}
+		}

@@ -3,7 +3,7 @@
 // Inherit the parent event
 event_inherited();
 
-hp = 10;
+hp = 30;
 display_hp = hp;
 
 ai_level = 1;

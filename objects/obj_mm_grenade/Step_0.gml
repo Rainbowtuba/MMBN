@@ -1,34 +1,37 @@
 /// @description Insert description here
 // You can write your code in this editor
-depth = obj_mega_man.depth-100;
-if x<=(spacing_w+dest_x*(cell_w))
+
+
+
+
+if x_n<=x
 {
-	x+=3*scale;
-	if x<=(spacing_w+dest_x*(cell_w))/2 height+=0.25*scale;
-	else height-=0.25*scale;
+	throw_height+=3.5*scale*dcos((x_n-x_0)/(dist)*180)
+	x_n+=2.5*scale
+	
 }
 else 
 {
-	var enemy = instance_place(x,y,oEnemyParent)
+	var enemy = instance_place(x,y,obj_enemy_parent)
 		if enemy!=noone
 		{
-			with  enemy hp-=dmg;
+			with  enemy hp-=other.dmg;
 		}
 		if lvl=2
 		{
-			var enemy2 = instance_place(x,y-cell_h,oEnemyParent)
+			var enemy2 = instance_place(x,y-cell_h,obj_enemy_parent)
 			if enemy2!=noone
 			{
-				with  enemy2 hp-=dmg;
+				with  enemy2 hp-=other.dmg;
 			}
-			var enemy3 = instance_place(x,y+cell_h,oEnemyParent)
+			var enemy3 = instance_place(x,y+cell_h,obj_enemy_parent)
 			if enemy3!=noone
 			{
-				with  enemy3 hp-=dmg;
+				with  enemy3 hp-=other.dmg;
 			}
-			instance_create_depth(x,y-cell_h,oExplosionFX,1);
-			instance_create_depth(x,y+cell_h,oExplosionFX,1);
+			instance_create_depth(x,y-cell_h,1,obj_explosion_effect);
+			instance_create_depth(x,y+cell_h,1,obj_explosion_effect);
 		}
-	instance_change(oExplosionFX,1);
+		instance_change(obj_explosion_effect,1);
 	
 }

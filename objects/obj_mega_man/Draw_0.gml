@@ -21,3 +21,7 @@ if battle_menu = 0
 		draw_sprite_ext(spr_debug_chips_icons,selected_chips[# 0, i],x+(scale*5)-i*(scale*2),y-48*scale-i*(scale*2),scale,scale,0,c_white,1);
 	}
 }
+
+/*
+draw_set_font(fnt_debug);
+draw_text(x,y-128,buffered_state);

@@ -27,7 +27,13 @@ exit;
 	#region Buster
 		if (buster_cooldown<buster_cooldown_time)	buster_cooldown+=1;
 		else										buster_cooldown=buster_cooldown_time;
-		if bb	{	buster_charge+=1;	}
+		if bb	
+		{
+			buster_charge+=1;	
+			if buster_charge=charge_a 	audio_play_sound(snd_buster_charge_1,1,0); 
+			if buster_charge=charge_b 	audio_play_sound(snd_buster_charge_2,1,0);
+			
+		}
 		if bbp 
 		{
 			if ((bbp&&buster_type=0)||(bb&&buster_type=1))&&(buster_cooldown=buster_cooldown_time)
@@ -90,7 +96,7 @@ exit;
 				with enemy 
 				{
 				hp-=1; //	hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
+				var fx=instance_create_depth(x-sprite_width,y,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_buster_effect;
 				}
 				attack_connected=1;
@@ -106,6 +112,7 @@ exit;
 				buster_cooldown=0;
 				buster_charge=0;
 				state_change=1;
+				audio_play_sound(snd_buster_charged,2,0);
 			}
 			var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 			if enemy!=noone&&attack_connected=0 
@@ -113,8 +120,8 @@ exit;
 				with enemy 
 				{
 				hp-=5; //	hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_buster_effect;
+				var fx=instance_create_depth(x-sprite_width,y,depth-1,obj_buster_dmg);
+				fx.sprite_index=spr_buster_effect_1;
 				}
 				attack_connected=1;
 				if enemy.grid_x-grid_x=1	buster_cooldown_time=15;
@@ -129,6 +136,7 @@ exit;
 				buster_cooldown=0;
 				buster_charge=0;
 				state_change=1;
+				audio_play_sound(snd_buster_charged,2,0);
 			}
 			var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 			if enemy!=noone&&attack_connected=0 
@@ -136,8 +144,8 @@ exit;
 				with enemy 
 				{
 				hp-=10; //	hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_buster_effect;
+				var fx=instance_create_depth(x-2*scale-sprite_width,y,depth-1,obj_buster_dmg);
+				fx.sprite_index=spr_buster_effect_2;
 				}
 				attack_connected=1;
 				if enemy.grid_x-grid_x=1	buster_cooldown_time=15;
@@ -147,7 +155,7 @@ exit;
 		}
 	#endregion
 	#region Chip Attacks
-	var active_chip = selected_chips[# 0, 0]
+	 active_chip = selected_chips[# 0, 0]
 
 	#region Cannons 
 	if active_chip=1||active_chip=2||active_chip=3
@@ -443,6 +451,7 @@ exit;
 				if active_chip=148 hp+=30;
 				if active_chip=149 hp+=50;
 				attack_connected=1;
+				audio_play_sound(snd_health_up,22,0);
 			}
 		}
 	}
@@ -487,29 +496,25 @@ exit;
 		}
 	}
 	#endregion
-	
-	#region ALL OTHERS (TO BE DELETED)
-	else if active_chip!=0
+	#region Attack+ 
+	if active_chip=195
 	{
 		if aap&&(item_cooldown=item_cooldown_time) 
 		{
-			if state=""
+			if state=""&&buffered_state=""
 			{
-				state="spreader";
+				state="attack+";
 				image_index=0;
 				item_cooldown=0; 
 			}
 			else if state="move"
 			{
-				buffered_state="spreader";
+				buffered_state="attack+"
 			}
-		}
-		if state="spreader"
-		{
-			buster_charge = 0;
 		}
 	}
 	#endregion
+
 	
 	
 	
@@ -519,19 +524,22 @@ exit;
 	#endregion // Chip Attacks
 
 	#region Chip Attack States
-		 if state="cannon1"||state="cannon2"||state="cannon3"
+	
+	// Attack +10 code
+	if selected_chips[# 0, 1]=195 damage_modifier=10;
+	else damage_modifier=0;
+	
+	if state="cannon1"||state="cannon2"||state="cannon3"
 	{
-		var enemy = collision_line_first(x,y-1,rm_w,y+1,obj_enemy_parent,0,1)
+		var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 		if enemy!=noone && attack_connected=0 
 		{
-			with enemy 
-			{
-				if other.state="cannon1" hp-=40; // hurt = 1;  event_user(0);
-				else if other.state="cannon2" hp-=60; // hurt = 1;  event_user(0);
-				else if other.state="cannon3" hp-=80; // hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_debug_explosion;
-			}
+			if state="cannon1"		enemy.hp-=40+damage_modifier; 
+			else if state="cannon2" enemy.hp-=60+damage_modifier; 
+			else if state="cannon3" enemy.hp-=80+damage_modifier; 
+			var fx=instance_create_depth(enemy.x,y,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_debug_explosion;
+			
 			attack_connected=1;
 		}
 		buster_charge = 0;	
@@ -541,39 +549,33 @@ exit;
 		var enemy = collision_line_first(x,y-1,rm_w,y+1,obj_enemy_parent,0,1)
 		if enemy!=noone && attack_connected=0 
 		{
-			with enemy 
-			{
-				var behind=collision_line(spacing_w+(grid_x)*(cell_w),spacing_h+(grid_y)*(cell_h),spacing_w+(grid_x+1)*(cell_w),spacing_h+(grid_y)*(cell_h),obj_enemy_parent,0,1)
+			var behind=instance_place(enemy.x+cell_w,enemy.y,obj_enemy_parent)
 				
-				if other.state="airshot1"		 {hp-=20;}// hurt = 1;  event_user(0);
-				else if other.state="airshot2" {hp-=30;} // hurt = 1;  event_user(0);
-				else if other.state="airshot3" {hp-=40;} // hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_debug_explosion;
-				if grid_x<stage_col&&behind=noone&&hp>0&&tile_type[grid_x+1,grid_y]!=0 grid_x+=1;
-			}
+			if state="airshot1"		 {enemy.hp-=20+damage_modifier;}// hurt = 1;  event_user(0);
+			else if state="airshot2" {enemy.hp-=30+damage_modifier;;} // hurt = 1;  event_user(0);
+			else if state="airshot3" {enemy.hp-=40+damage_modifier;;} // hurt = 1;  event_user(0);
+			var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_debug_explosion;
+			if enemy.grid_x<stage_col&&behind=noone&&hp>0&&tile_type[enemy.grid_x+1,enemy.grid_y]!=0 enemy.grid_x+=1;
 			attack_connected=1;
 		}
 		buster_charge = 0;	
 	}
 	else if state="shotgun" 
 	{
-		var enemy = collision_line_first(x,y-1,rm_w,y+1,obj_enemy_parent,0,1)
+		var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 		if enemy!=noone && attack_connected=0 
 		{
-			with enemy 
-			{
-				hp-=30;// hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_spreadgun_effect;
-				var fx=instance_create_depth(x+cell_w,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_spreadgun_effect;
-				var enemy2 = collision_line_first(x,y-1,x+cell_w,y+1,obj_enemy_parent,0,1)
-				if enemy2!=noone
-				{
-					with  enemy2 hp-=30;
-				}
+			enemy.hp-=30+damage_modifier;// hurt = 1;  event_user(0);
+			var fx=instance_create_depth(enemy.x,y,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_spreadgun_effect;
+			var fx=instance_create_depth(enemy.x+cell_w,y,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_spreadgun_effect;
 				
+			var enemy2 = instance_place(enemy.x+cell_w,enemy.y,obj_enemy_parent)
+			if enemy2!=noone
+			{
+				enemy2.hp-=30+damage_modifier;
 			}
 			attack_connected=1;
 		}
@@ -581,24 +583,23 @@ exit;
 	}
 	else if state="vgun" 
 	{
-		var enemy = collision_line_first(x,y-1,rm_w,y+1,obj_enemy_parent,0,1)
+		var enemy = collision_line_first(x,y,rm_w,y,obj_enemy_parent,0,1)
 		if enemy!=noone && attack_connected=0 
 		{
-			with enemy 
-			{
-				hp-=30;// hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
+
+				enemy.hp-=30+damage_modifier;// hurt = 1;  event_user(0);
+				var fx=instance_create_depth(enemy.x,enemy.y,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_spreadgun_effect;
-				var fx=instance_create_depth(x+cell_w,y+cell_h,depth-1,obj_buster_dmg);
+				var fx=instance_create_depth(enemy.x+cell_w,enemy.y+cell_h,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_spreadgun_effect;
-				var fx=instance_create_depth(x+cell_w,y-cell_h,depth-1,obj_buster_dmg);
+				var fx=instance_create_depth(enemy.x+cell_w,enemy.y-cell_h,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_spreadgun_effect;
 				
-				var enemy2 = instance_place(x+cell_w,y+cell_h,obj_enemy_parent)
-				if enemy2!=noone 	{	with  enemy2 hp-=30;	}
-				var enemy3 = instance_place(x+cell_w,y-cell_h,obj_enemy_parent)
-				if enemy3!=noone 	{	with  enemy3 hp-=30;	}
-			}
+				var enemy2 = instance_place(enemy.x+cell_w,enemy.y+cell_h,obj_enemy_parent)
+				if enemy2!=noone 	{ enemy2.hp-=30+damage_modifier;	}
+				var enemy3 = instance_place(enemy.x+cell_w,enemy.y-cell_h,obj_enemy_parent)
+				if enemy3!=noone 	{ enemy3.hp-=30+damage_modifier;	}
+
 			attack_connected=1;
 		}
 		buster_charge = 0;	
@@ -608,35 +609,34 @@ exit;
 		var enemy = collision_line_first(x,y-1,rm_w,y+1,obj_enemy_parent,0,1)
 		if enemy!=noone && attack_connected=0 
 		{
-			with enemy 
+
+			enemy.hp-=30;// hurt = 1;  event_user(0);
+			var fx=instance_create_depth(enemy.x,enemy.y,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_spreadgun_effect;
+			var fx=instance_create_depth(enemy.x,enemy.y+cell_h,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_spreadgun_effect;
+			var fx=instance_create_depth(enemy.x,enemy.y-cell_h,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_spreadgun_effect;
+				
+			var enemy2 = instance_place(enemy.x,enemy.y+cell_h,obj_enemy_parent)
+			if enemy2!=noone
 			{
-				hp-=30;// hurt = 1;  event_user(0);
-				var fx=instance_create_depth(x,y,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_spreadgun_effect;
-				var fx=instance_create_depth(x,y+cell_h,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_spreadgun_effect;
-				var fx=instance_create_depth(x,y-cell_h,depth-1,obj_buster_dmg);
-				fx.sprite_index=spr_spreadgun_effect;
-				
-				var enemy2 = instance_place(x,y+cell_h,obj_enemy_parent)
-				if enemy2!=noone
-				{
-					with  enemy2 hp-=30;
-				}
-				var enemy3 = instance_place(x,y-cell_h,obj_enemy_parent)
-				if enemy3!=noone
-				{
-					with  enemy3 hp-=30;
-				}
-				
+				enemy2.hp-=30+damage_modifier;
 			}
+			var enemy3 = instance_place(enemy.x,enemy.y-cell_h,obj_enemy_parent)
+			if enemy3!=noone
+			{
+				enemy3.hp-=30+damage_modifier;
+			}
+				
+			
 			attack_connected=1;
 		}
 		buster_charge = 0;	
 	}
 	else if state="grenade1"||state="grenade2"||state="grenade3" 
 	{
-		if  attack_connected=0&&image_index>4
+		if  attack_connected=0&&image_index>3
 		{
 			instance_create_depth(x,y,depth-1,obj_mm_grenade);
 			attack_connected=1;
@@ -649,13 +649,10 @@ exit;
 		{
 			var fx=instance_create_depth(x+cell_w,y,depth-1,obj_buster_dmg);
 			fx.sprite_index=spr_mm_sword_1;
-			var enemy = collision_line_first(x,y-1,x+cell_w,y+1,obj_enemy_parent,0,1);
+			var enemy = instance_place(x+cell_w,y,obj_enemy_parent);
 			if enemy!=noone
 			{
-				with enemy 
-				{
-					hp-=80;
-				}
+				enemy.hp-=80+damage_modifier;
 			}
 		attack_connected=1;
 		}
@@ -668,13 +665,13 @@ exit;
 		{
 			var fx=instance_create_depth(x+cell_w,y,depth-1,obj_buster_dmg);
 				fx.sprite_index=spr_mm_sword_1;
-			var enemy = collision_line_first(x,y-1,x+cell_w,y+1,obj_enemy_parent,0,1);
+			var enemy = instance_place(x+cell_w,y,obj_enemy_parent);
 			var enemy2 = instance_place(x+cell_w,y+cell_h,obj_enemy_parent);
 			var enemy3 = instance_place(x+cell_w,y-cell_h,obj_enemy_parent);
 			
-			if enemy!=noone   { with enemy 		{hp-=80;} }
-			if enemy2!=noone  { with enemy2 	{hp-=80;} }
-			if enemy3!=noone  { with enemy3 	{hp-=80;} }
+			if enemy!=noone   { enemy.hp-=80+damage_modifier; }
+			if enemy2!=noone  { enemy2.hp-=80+damage_modifier; }
+			if enemy3!=noone  { enemy3.hp-=80+damage_modifier; }
 		attack_connected=1;
 		}
 		buster_charge = 0;	
@@ -689,8 +686,8 @@ exit;
 			var enemy2 = instance_place(x+2*cell_w,y,obj_enemy_parent);
 			
 			
-			if enemy!=noone   { with enemy 		{hp-=80;} }
-			if enemy2!=noone  { with enemy2 	{hp-=80;} }
+			if enemy!=noone   { enemy.hp-=80+damage_modifier; }
+			if enemy2!=noone  { enemy2.hp-=80+damage_modifier; }
 
 		attack_connected=1;
 		}
@@ -701,10 +698,10 @@ exit;
 		if  attack_connected=0&&image_index>4
 		{
 			#region Center Panel
-			var enemy = collision_line_first(x,y-1,x+cell_w,y+1,obj_enemy_parent,0,1);
+			var enemy = instance_place(x+cell_w,y,obj_enemy_parent);
 			if enemy!=noone
 			{
-				enemy.hp-=10;
+				enemy.hp-=10+damage_modifier;
 				attack_connected=1;
 			}
 			else 
@@ -721,7 +718,7 @@ exit;
 				var enemy1 = instance_place(x+cell_w,y-cell_h,obj_enemy_parent);
 				if enemy1!=noone
 				{
-					enemy1.hp-=10;
+					enemy1.hp-=10+damage_modifier;
 				}
 				else 
 				{
@@ -737,7 +734,7 @@ exit;
 				var enemy2 = instance_place(x+cell_w,y+cell_h,obj_enemy_parent);
 				if enemy2!=noone
 				{
-					enemy2.hp-=10;
+					enemy2.hp-=10+damage_modifier;
 				}
 				else 
 				{
@@ -750,7 +747,7 @@ exit;
 		}
 		buster_charge = 0;	
 	}
-	else if  state="panelgrab"||state="areagrab"
+	else if state="panelgrab"||state="areagrab"
 	{
 		if  attack_connected=0
 		{
@@ -779,6 +776,16 @@ exit;
 			attack_connected=1;
 			{state="";selected_chips[# 0,0]=0;ds_grid_translate(selected_chips,0,-1);attack_connected=0; buffered_state="";}
 		}
+	}
+	else if state="attack+"
+	{
+		if  attack_connected=0&&image_index>1
+		{
+			var fx=instance_create_depth(x+8*scale,y-40*scale,depth-1,obj_buster_dmg);
+			fx.sprite_index=spr_panl_out_smoke;
+			attack_connected=1;
+		}
+		buster_charge = 0;	
 	}
 	#endregion
 	
@@ -839,4 +846,7 @@ exit;
 		
 	if state="panelout1"||state="panelout3"
 		sprite_index=spr_mm_panel_out;
+		
+	if state="attack+"
+		sprite_index=spr_mm_stand_3_frame;
 	#endregion
